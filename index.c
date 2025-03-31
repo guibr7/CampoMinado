@@ -20,7 +20,6 @@ void InserirNome(ClasseJogador *player);
 
 int main() { 
     int opcao = -1;
-    
     do{
         menu();
         scanf("%d", &opcao);
@@ -30,8 +29,9 @@ int main() {
                 break;
             case 1: {
                 ClasseJogador jogador;
-                InserirNome(&jogador);
+                //InserirNome(&jogador);
                 ModoJogo(&jogador);
+                estruturaJogo(&jogador);
                 //printf("Nome digitado: %s\n", jogador.nome);
                 opcao = 0;
                 break;
@@ -40,16 +40,6 @@ int main() {
                 ClasseJogador jogador;
                 InserirNome(&jogador);
             break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
             default:
                 printf("\033[1;31m[ERRO]\033[0m Número inválido! Por favor, tente novamente.\n");
                 break;
@@ -60,6 +50,7 @@ int main() {
 }
 
 void menu(){
+    //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("  "))) ANSI_RESET);
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("    #### BEM VINDO AO "))) ANSI_RESET);
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" CAMPO MINADO")))) ANSI_RESET);
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ####   " "\n"))) ANSI_RESET);
@@ -72,6 +63,7 @@ void menu(){
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 7 ⮞  AJUDA                                \n"))) ANSI_RESET);
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" 0 ⮞  SAIR                                 \n")))) ANSI_RESET);
     printf(" Digite o número da opção escolhida: ");
+
 }
 
 void InserirNome(ClasseJogador *player){
@@ -79,7 +71,7 @@ void InserirNome(ClasseJogador *player){
     __ssize_t numCaracteres = 0;
     do {
         player->nome = NULL;
-        printf("Digite seu nome:");
+        printf(" Digite seu nome: ");
         numCaracteres = getline(&player->nome, &tamBuffer, stdin);
         
         if (numCaracteres == -1 || numCaracteres == 1) { // Erro na leitura ou sem nome
@@ -97,28 +89,49 @@ void InserirNome(ClasseJogador *player){
 }
 
 void ModoJogo(ClasseJogador *player) {
-    printf("Selecione o modo de jogo:"); char temp;
-    scanf("%c",&temp);
-    player->modo = tolower(temp);
-    switch (player->modo)
-    {
-    case 'f':
-        player->tamTabu = 9;
-        player->numBomb = 10;
-    break;
-    case 'm':
-        player->tamTabu = 15;
-        player->numBomb = 25;
-    break;
-    case 'd':
-        player->tamTabu = 20;
-        player->numBomb = 45;
-    break;
-        
-    default:
+    int x = -1;
+    char temp;
+    do{
+        printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("          ESCOLHA A DIFICULDADE:           \n"))) ANSI_RESET);
+        printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT(BLUE(BOLD("F"))) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") FÁCIL   | 10 MINAS                    \n"))) ANSI_RESET);
+        printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT("\x1b[38;5;208m" BOLD("M") ANSI_RESET) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") MÉDIO   | 25 MINAS                    \n"))) ANSI_RESET);
+        printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT(RED(BOLD("D"))) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") DIFÍCIL | 45 MINAS                    \n"))) ANSI_RESET);
+        printf(" DIGITE A LETRA CORRESPONDENTE: ");
+
+        scanf("%c",&temp);
+        limparBuffer();
+        player->modo = tolower(temp);
+        switch (player->modo)
+        {
+        case 'f':
+            x = 0;
+            player->tamTabu = 9;
+            player->col = 9;
+            player->lin = 9;
+            player->numMina = 10;
+        break;
+        case 'm':
+            x = 0;
+            player->tamTabu = 15;
+            player->col = 15;
+            player->lin = 15;
+            player->numMina = 25;
+        break;
+        case 'd':
+            x = 0;
+            player->tamTabu = 20;
+            player->col = 20;
+            player->lin = 20;
+            player->numMina = 45;
+        break;
+            
+        default:
+            printf("\033[1;31m[ERRO]\033[0m Modo inválido! Por favor, tente novamente.\n");
         
         break;
-    }
+        }
+    }while(x != 0);
+    
     //printf("Mode %c\n",player->modo);
-   // printf("tabu %d",player->tamTabu);
+    printf("col %d",player->col);
 }

@@ -5,8 +5,11 @@ typedef struct {
     char *nome;
     char modo;
     int tamTabu;
-    int numBomb;
+    int numMina;
     float tempo;
+
+    int col;
+    int lin;
 } ClasseJogador;
 
 #endif  // Fecha a proteção

@@ -1,3 +1,3 @@
 #include <stdio.h>
 #include "StrctJogador.h"
-void estruturaJogo();
+void estruturaJogo(ClasseJogador *player);
