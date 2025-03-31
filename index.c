@@ -7,13 +7,6 @@
 #include "cores.h"
 #include "funcoes.h"
 
-
-void limparBuffer();
-void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 void menu();
 void ModoJogo(ClasseJogador *player);
 void InserirNome(ClasseJogador *player);
@@ -31,6 +24,7 @@ int main() {
                 ClasseJogador jogador;
                 //InserirNome(&jogador);
                 ModoJogo(&jogador);
+                system("clear");
                 estruturaJogo(&jogador);
                 //printf("Nome digitado: %s\n", jogador.nome);
                 opcao = 0;
@@ -46,24 +40,8 @@ int main() {
         }
         printf("\n");
     }while(opcao != 0);
+    
     return 0;
-}
-
-void menu(){
-    //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("  "))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("    #### BEM VINDO AO "))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" CAMPO MINADO")))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ####   " "\n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 1 ⮞  NOVO JOGO PADRÃO                     ""\n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 2 ⮞  NOVO JOGO PERSONALIZADO              ""\n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 3 ⮞  VOLTAR PARA O JOGO ATUAL             ""\n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 4 ⮞  CARREGAR UM JOGO SALVO               ""\n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 5 ⮞  SALVAR O JOGO ATUAL                 "" \n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 6 ⮞  RANKING                              \n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 7 ⮞  AJUDA                                \n"))) ANSI_RESET);
-    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" 0 ⮞  SAIR                                 \n")))) ANSI_RESET);
-    printf(" Digite o número da opção escolhida: ");
-
 }
 
 void InserirNome(ClasseJogador *player){
@@ -131,7 +109,22 @@ void ModoJogo(ClasseJogador *player) {
         break;
         }
     }while(x != 0);
-    
     //printf("Mode %c\n",player->modo);
     printf("col %d",player->col);
+}
+void menu(){
+    //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("  "))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("    #### BEM VINDO AO "))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" CAMPO MINADO")))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ####   " "\n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 1 ⮞  NOVO JOGO PADRÃO                     ""\n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 2 ⮞  NOVO JOGO PERSONALIZADO              ""\n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 3 ⮞  VOLTAR PARA O JOGO ATUAL             ""\n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 4 ⮞  CARREGAR UM JOGO SALVO               ""\n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 5 ⮞  SALVAR O JOGO ATUAL                 "" \n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 6 ⮞  RANKING                              \n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 7 ⮞  AJUDA                                \n"))) ANSI_RESET);
+    printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" 0 ⮞  SAIR                                 \n")))) ANSI_RESET);
+    printf(" Digite o número da opção escolhida: ");
+
 }

@@ -6,7 +6,7 @@ typedef struct {
     char modo;
     int tamTabu;
     int numMina;
-    float tempo;
+    double tempo;
 
     int col;
     int lin;
