@@ -86,21 +86,21 @@ void ModoJogo(ClasseJogador *player) {
             player->tamTabu = 9;
             player->col = 9;
             player->lin = 9;
-            player->numMina = 10;
+            player->numBomb = 10;
         break;
         case 'm':
             x = 0;
             player->tamTabu = 15;
             player->col = 15;
             player->lin = 15;
-            player->numMina = 25;
+            player->numBomb = 25;
         break;
         case 'd':
             x = 0;
             player->tamTabu = 20;
             player->col = 20;
             player->lin = 20;
-            player->numMina = 45;
+            player->numBomb = 45;
         break;
             
         default:
@@ -110,7 +110,7 @@ void ModoJogo(ClasseJogador *player) {
         }
     }while(x != 0);
     //printf("Mode %c\n",player->modo);
-    printf("col %d",player->col);
+    //printf("col %d",player->col);
 }
 void menu(){
     //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("  "))) ANSI_RESET);
