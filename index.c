@@ -10,7 +10,7 @@
 void menu();
 void ModoJogo(ClasseJogador *player);
 void InserirNome(ClasseJogador *player);
-
+void ajuda();
 int main() { 
     int opcao = -1;
     do{
@@ -18,35 +18,39 @@ int main() {
         scanf("%d", &opcao);
         limparBuffer();
         switch (opcao) {
-          
             case 0:
                 break;
-            case 1: {
+            case 1: { //Novo jogo
                 ClasseJogador jogador;
-                //InserirNome(&jogador);
+                InserirNome(&jogador);
                 ModoJogo(&jogador);
                 system("clear");
                 estruturaJogo(&jogador);
-                //printf("Nome digitado: %s\n", jogador.nome);
                 opcao = 0;
                 break;
             }
-            case 2:
+            case 2: //Jogo personalizado
                 ClasseJogador jogador;
                 InserirNome(&jogador);
+                printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Digite as dimensões do tabuleiro <lin> <col> <Quantidade de minas> respectivamente: \n"))) ANSI_RESET);
+                scanf("%d%d%d",&jogador.col,&jogador.lin,&jogador.numBomb);
+                estruturaJogo(&jogador);
+                opcao = 0;
+            break;
+            case 7: //Ajuda
+            system("clear");
+                ajuda();
             break;
             default:
                 printf("\x1B[1J");
                 system("clear");
                 printf("\033[1;31m[ERRO]\033[0m Número inválido! Por favor, tente novamente.");
-                break;
+            break;
         }
         printf("\n");
     }while(opcao != 0);
-    
     return 0;
 }
-
 void InserirNome(ClasseJogador *player){
     size_t tamBuffer = 0;
     __ssize_t numCaracteres = 0;
@@ -62,22 +66,19 @@ void InserirNome(ClasseJogador *player){
         } else {
             if (player->nome[numCaracteres - 1] == '\n') {
                 player->nome[numCaracteres - 1] = '\0'; 
-            }
-            
+            } 
         }
     } while (!numCaracteres);
 }
-
 void ModoJogo(ClasseJogador *player) {
     int x = -1;
-    char temp; //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("       \n"))) ANSI_RESET);
+    char temp;
     do{
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("          ESCOLHA A DIFICULDADE:           \n"))) ANSI_RESET);
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT(BLUE(BOLD("F"))) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") FÁCIL   | 10 MINAS                    \n"))) ANSI_RESET);
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT("\x1b[38;5;208m" BOLD("M") ANSI_RESET) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") MÉDIO   | 25 MINAS                    \n"))) ANSI_RESET);
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT(RED(BOLD("D"))) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") DIFÍCIL | 45 MINAS                    \n"))) ANSI_RESET);
         printf(" DIGITE A LETRA CORRESPONDENTE: ");
-
         scanf("%c",&temp);
         limparBuffer();
         player->modo = tolower(temp);
@@ -103,16 +104,13 @@ void ModoJogo(ClasseJogador *player) {
             player->col = 20;
             player->lin = 20;
             player->numBomb = 45;
-        break;
-            
+        break;     
         default:
             printf("\033[1;31m[ERRO]\033[0m Modo inválido! Por favor, tente novamente.\n");
         
         break;
         }
     }while(x != 0);
-    //printf("Mode %c\n",player->modo);
-    //printf("col %d",player->col);
 }
 void menu(){
     //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("  "))) ANSI_RESET);
@@ -128,5 +126,28 @@ void menu(){
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" 7 ⮞  AJUDA                                \n"))) ANSI_RESET);
     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(RED(BOLD(" 0 ⮞  SAIR                                 \n")))) ANSI_RESET);
     printf(" Digite o número da opção escolhida: ");
-
 }
+void ajuda(){
+    printf("\n");
+    printf(BOLD(" COMO JOGAR - CAMPO MINADO "));
+    printf("\n\n");
+    printf(BOLD(" O objetivo do jogo é revelar todas as posições que não contêm bombas, sem explodir nenhuma delas. "));
+    printf("\n");
+    printf(BOLD(" O tabuleiro contém números que indicam quantas bombas estão nas posições adjacentes. "));
+    printf("\n");
+    printf(BOLD(" Use sua lógica para deduzir onde estão as bombas e marque-as com bandeiras! "));
+    printf("\n\n");
+
+    printf(BOLD(" COMANDOS DO JOGO: "));
+    printf("\n\n");
+    printf(BOLD(" <lin col>: Posição linha e coluna que deseja abrir."));
+    printf("\n");
+    printf(BOLD(" m <lin col>: Marcar a posição linha e coluna com uma bandeira."));
+    printf("\n");
+    printf(BOLD(" d <lin col>: Desmarcar a posição linha e coluna previamente marcada com uma bandeira."));
+    printf("\n\n");
+    printf(BOLD(" desistir: Mostra o jogo com todas as posições abertas. Com este comando o jogador não pode continuar a jogar e só pode voltar ao menu inicial."));
+    printf("\n");
+    printf(BOLD(" voltar: Volta para o menu inicial."));
+    printf("\n");
+}    

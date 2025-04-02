@@ -6,11 +6,13 @@
 #include <ctype.h>
 #include <string.h>
 
-void ExibirTabuleiro(int **matriz, char **matrizStatus, int lin, int col, int selectLin , int selectCol);
+void ExibirTabuleiro(int **matriz, char **matrizStatus, int lin, int col, int selectLin , int selectCol,ClasseJogador *player);
+int main();
 void preencherMatriz(ClasseJogador *player,int **matriz, char **matrizStatus, int l, int c);
-
+int verificarEstadoJogo(int **matriz, char **matrizStatus, int lin, int col, int numBomb);
+void LiberarMemoria(int **matriz, char **matrizStatus, int l);
 void estruturaJogo(ClasseJogador *player){
-    int lin,col,**matriz; char **matrizStatus;
+int lin,col,**matriz; char **matrizStatus;
 
     lin = player->lin;
     col = player->col;
@@ -34,10 +36,10 @@ void estruturaJogo(ClasseJogador *player){
         }
     }
     preencherMatriz(player,matriz,matrizStatus,lin,col);
-    ExibirTabuleiro(matriz, matrizStatus, lin, col,0,0);
+    ExibirTabuleiro(matriz, matrizStatus, lin, col,0,0, player);
 
 
-//---------------LEITURA DE COMANDOS DURANTE PARTIDA------------------------------//
+    //---------------LEITURA DE COMANDOS DURANTE PARTIDA------------------------------//
     char comando[20]; int x = 0 ; int cmdLin,cmdCol; 
     do{ 
         printf("Comando: ");
@@ -50,28 +52,30 @@ void estruturaJogo(ClasseJogador *player){
 
         if (strcmp(comando, "desistir") == 0) { 
             printf("\nDesistiu!");
+            LiberarMemoria(matriz,matrizStatus,lin);
         }else if(strcmp(comando,"voltar") == 0){
             printf("\nVoltou!");
         }
         
-        if(isdigit(comando[0])){ //Se a primeira entrada for um numero
+        if(isdigit(comando[0])){ //Se a primeira entrada for um número
             cmdLin = atoi(comando);
-            
             scanf("%d", &cmdCol);
             //Abrir celular
             if((cmdLin >= 0  && cmdLin <=lin) && (cmdCol >= 0  && cmdCol <=col)){ 
                 if(matrizStatus[cmdLin][cmdCol] == 'F' || matrizStatus[cmdLin][cmdCol] == 'B'){ 
                     matrizStatus[cmdLin][cmdCol] = 'A';
                     system("clear");
-                    ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                    ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                     //printf("\nAbrir posição: %c",  matrizStatus[cmdLin][cmdCol]);
-                }else{
+                }else if( matrizStatus[cmdLin][cmdCol] == 'A'){
                     system("clear");
-                    ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                    ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                     printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Posição já aberta!\n"))) ANSI_RESET);
                 }
             }else{
-                printf("Posição inexistente\n");
+                system("clear");
+                ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
+                printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Posição inexistente!\n"))) ANSI_RESET);
             }
         } 
         else if(isalpha(comando[0])){ //Se a primeira entrada for uma letra
@@ -84,14 +88,14 @@ void estruturaJogo(ClasseJogador *player){
                     if(matrizStatus[cmdLin][cmdCol] == 'F'){ 
                         matrizStatus[cmdLin][cmdCol] = 'B';
                         system("clear");
-                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                     }else if(matrizStatus[cmdLin][cmdCol] == 'A'){
                         system("clear");
-                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Não é possível marcar uma posição já aberta!   \n"))) ANSI_RESET);
                     }else{
                         system("clear");
-                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                        ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Posição já marcada.\n"))) ANSI_RESET);
                     }
                     break;
@@ -99,10 +103,10 @@ void estruturaJogo(ClasseJogador *player){
                         if(matrizStatus[cmdLin][cmdCol] == 'B'){
                             matrizStatus[cmdLin][cmdCol] = 'F';
                             system("clear");
-                            ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                            ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                         }else{
                             system("clear");
-                            ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol);
+                            ExibirTabuleiro(matriz, matrizStatus, lin, col,cmdLin,cmdCol,player);
                             printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" Não é possível desmarcar uma posição não marcada!   \n"))) ANSI_RESET);
                         }
                     break;
@@ -116,13 +120,7 @@ void estruturaJogo(ClasseJogador *player){
             }
         }
     }while(x == 0);
-    
-    for(int i = 0; i < lin; i++){
-        free(matriz[i]);
-        free(matrizStatus[i]);
-    }
-    free(matriz);
-    free(matrizStatus);
+      LiberarMemoria(matriz,matrizStatus,lin);
 };
 
 
@@ -176,63 +174,95 @@ void preencherMatriz(ClasseJogador *player,int **matriz, char **matrizStatus, in
     }
 }
 
-void ExibirTabuleiro(int **matriz, char **matrizStatus, int lin, int col, int selectLin , int selectCo){
-
-   
-
-    //Cordenada coluna
-        printf("    ");
-        for(int c = 0; c < col ; c++){
-            printf("%2d ",c);
-        }
-        printf("\n");
-        printf("  "); 
-        printf("%s",TAB_TL);
-        for(int c = 0; c < col*3 ; c++){
-            printf("%s",TAB_HOR);
-        }
-        printf("\n"); //Fim Cordenada Coluna
-        for (int i = 0; i < lin; i++) {
-            printf("%2d", i);
-            printf("%2s",TAB_VER);
-            printf(" ");
-            int r;
-            for (int j = 0; j < col; j++) {
-                r = (i + j) % 2;
-                if ( r == 0) {
-                   if(matrizStatus[i][j] == 'F'){ 
-                        printf(BG_LIGHT_GRAY "   " RESET); // Cinza claro
-                    }else if( matrizStatus[i][j] == 'A'){ 
-                        if(matriz[i][j] == 99){ 
-                        printf(BG_RED(BLACK_BRIGHT(" ✹ ")) RESET);
-                        }else if(!matriz[i][j]){ 
-                            printf(BG_GRAY "   " RESET);
-                        }else{ 
-                            printf(BG_LIGHT_GRAY BOLD(" %d " )RESET, matriz[i][j]);
-                        }
-                    }else if(matrizStatus[i][j] == 'B'){
-                        printf(BG_GREEN(" ⚑ ") RESET); // Cinza claro
-                    }
-    
-                } else {
+void ExibirTabuleiro(int **matriz, char **matrizStatus, int lin, int col, int selectLin , int selectCo,ClasseJogador *player){
+  
+    verificarEstadoJogo(matriz,matrizStatus, lin, col, player->numBomb);
+            //Cordenada coluna
+            printf("    ");
+            for(int c = 0; c < col ; c++){
+                printf("%2d ",c);
+            }
+            printf("\n");
+            printf("  "); 
+            printf("%s",TAB_TL);
+            for(int c = 0; c < col*3 ; c++){
+                printf("%s",TAB_HOR);
+            }
+            printf("\n"); //Fim Cordenada Coluna
+            for (int i = 0; i < lin; i++) {
+                printf("%2d", i);
+                printf("%2s",TAB_VER);
+                printf(" ");
+                int r;
+                for (int j = 0; j < col; j++) {
+                    r = (i + j) % 2;
+                    if ( r == 0) {
                     if(matrizStatus[i][j] == 'F'){ 
-                        printf(BG_DARK_GRAY"   " RESET); // Cinza escuro
-                    }else if( matrizStatus[i][j] == 'A'){ 
-                        if(matriz[i][j] == 99){ 
-                        printf(BG_RED(BLACK_BRIGHT(" ✹ ")) RESET);
-                        }else if(!matriz[i][j]){
-                            printf(BG_GRAY "   " RESET);
-                        }else{
-                            printf(BG_DARK_GRAY BOLD(WHITE_BRIGHT(" %d " ))RESET, matriz[i][j]);
-                            
+                            printf(BG_LIGHT_GRAY "   " RESET); // Cinza claro
+                        }else if( matrizStatus[i][j] == 'A'){ 
+                            if(matriz[i][j] == 99){ 
+                            printf(BG_RED(BLACK_BRIGHT(" ✹ ")) RESET);
+                            }else if(!matriz[i][j]){ 
+                                printf(BG_WHITE_BRIGHT( "   " ) RESET);
+                            }else{ 
+                                printf(BG_LIGHT_GRAY BOLD(" %d " )RESET, matriz[i][j]);
+                            }
+                        }else if(matrizStatus[i][j] == 'B'){
+                            printf(BG_GREEN(" ⚑ ") RESET); // Cinza claro
                         }
-                    }else if(matrizStatus[i][j] == 'B'){
-                        printf(BG_GREEN(" ⚑ ") RESET); // Cinza claro
+        
+                    } else {
+                        if(matrizStatus[i][j] == 'F'){ 
+                            printf(BG_DARK_GRAY"   " RESET); // Cinza escuro
+                        }else if( matrizStatus[i][j] == 'A'){ 
+                            if(matriz[i][j] == 99){ 
+                            printf(BG_RED(BLACK_BRIGHT(" ✹ ")) RESET);
+                            }else if(!matriz[i][j]){
+                                printf(BG_WHITE_BRIGHT( "   " ) RESET);
+                            }else{
+                                printf(BG_DARK_GRAY BOLD(WHITE_BRIGHT(" %d " ))RESET, matriz[i][j]);
+                                
+                            }
+                        }else if(matrizStatus[i][j] == 'B'){
+                            printf(BG_GREEN(" ⚑ ") RESET); // Cinza claro
+                        }
+        
                     }
+                }
+                printf("\n"); // Nova linha para o próximo "andar" do tabuleiro
+            }
+            printf("\n");
+        }
+    int verificarEstadoJogo(int **matriz, char **matrizStatus, int lin, int col, int numBomb) {
+        int abertas = 0;
+        int totalSeguras = (lin * col) - numBomb;
     
+        for (int i = 0; i < lin; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matriz[i][j] == 99 && matrizStatus[i][j] == 'A') {
+                    printf("💥 VOCÊ PERDEU! CAIU EM UMA BOMBA\n");
+                    LiberarMemoria(matriz,matrizStatus,lin);
+                    main();
+                }
+                if (matriz[i][j] != 99 && matrizStatus[i][j] == 'A') {
+                    abertas++;
                 }
             }
-            printf("\n"); // Nova linha para o próximo "andar" do tabuleiro
         }
-        printf("\n");
+    
+        if (abertas == totalSeguras) {
+            printf("🎉 VITÓRIA! 🎉\n");
+            LiberarMemoria(matriz,matrizStatus,lin);
+            main();
+        }
+    
+        return 0;
+    }
+    void LiberarMemoria(int **matriz, char **matrizStatus,int l){
+        for (int i = 0; i < l; i++) {
+            free(matriz[i]);
+            free(matrizStatus[i]);
+        }
+        free(matriz);
+        free(matrizStatus);
     }

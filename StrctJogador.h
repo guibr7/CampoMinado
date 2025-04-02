@@ -7,7 +7,6 @@ typedef struct {
     int tamTabu;
     int numBomb;
     double tempo;
-
     int col;
     int lin;
 } ClasseJogador;
