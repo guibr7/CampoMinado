@@ -18,6 +18,7 @@ int main() {
         scanf("%d", &opcao);
         limparBuffer();
         switch (opcao) {
+          
             case 0:
                 break;
             case 1: {
@@ -35,7 +36,9 @@ int main() {
                 InserirNome(&jogador);
             break;
             default:
-                printf("\033[1;31m[ERRO]\033[0m Número inválido! Por favor, tente novamente.\n");
+                printf("\x1B[1J");
+                system("clear");
+                printf("\033[1;31m[ERRO]\033[0m Número inválido! Por favor, tente novamente.");
                 break;
         }
         printf("\n");
@@ -51,7 +54,6 @@ void InserirNome(ClasseJogador *player){
         player->nome = NULL;
         printf(" Digite seu nome: ");
         numCaracteres = getline(&player->nome, &tamBuffer, stdin);
-        
         if (numCaracteres == -1 || numCaracteres == 1) { // Erro na leitura ou sem nome
             numCaracteres = 0;
             printf("Nenhum nome foi digitado. Digite novamente:\n");
@@ -63,12 +65,12 @@ void InserirNome(ClasseJogador *player){
             }
             
         }
-    } while (numCaracteres == 0);
+    } while (!numCaracteres);
 }
 
 void ModoJogo(ClasseJogador *player) {
     int x = -1;
-    char temp;
+    char temp; //printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("       \n"))) ANSI_RESET);
     do{
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD("          ESCOLHA A DIFICULDADE:           \n"))) ANSI_RESET);
         printf(BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(" ("))) BG_WHITE_BRIGHT(BLUE(BOLD("F"))) BG_WHITE_BRIGHT(BLACK_BRIGHT(BOLD(") FÁCIL   | 10 MINAS                    \n"))) ANSI_RESET);

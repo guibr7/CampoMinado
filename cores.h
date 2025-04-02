@@ -31,7 +31,7 @@
 #define BLUE(string)       ANSI_COLOR_BLUE       string ANSI_RESET
 #define MAGENTA(string)    ANSI_COLOR_MAGENTA    string ANSI_RESET
 #define CYAN(string)       ANSI_COLOR_CYAN       string ANSI_RESET
-#define WHITE(string)      ANSI_COLOR_WHITE      string ANSI_RESET
+
 #define BG_BLACK(string)   ANSI_BG_COLOR_BLACK   string ANSI_RESET
 #define BG_BLUE(string)    ANSI_BG_COLOR_BLUE    string ANSI_RESET
 #define BG_RED(string)     ANSI_BG_COLOR_RED     string ANSI_RESET
@@ -40,11 +40,17 @@
 #define BG_BLUE(string)    ANSI_BG_COLOR_BLUE    string ANSI_RESET
 #define BG_MAGENTA(string) ANSI_BG_COLOR_MAGENTA string ANSI_RESET
 #define BG_CYAN(string)    ANSI_BG_COLOR_CYAN    string ANSI_RESET
-#define BG_WHITE(string)   ANSI_BG_COLOR_WHITE   string ANSI_RESET
+#define WHITE(string)      ANSI_COLOR_WHITE      string ANSI_RESET
+
 #define BG_DARK_GRAY "\x1b[48;5;235m"  // Cinza escuro
 #define BG_LIGHT_GRAY "\x1b[48;5;245m" // Cinza claro
+#define BG_YELLOW_BRIGHT "\x1B[103m"
+#define YELLOW_BRIGHT "\x1B[1;33m"
 #define ANSI_COLOR_WHITE_BRIGHT  "\x1b[97m"
 #define ANSI_COLOR_BLACK_BRIGHT  "\x1b[90m"
+#define BG_WHITE "\x1B[47m"  // Fundo branco
+#define BG_GRAY "\x1B[47m"  // Fundo cinza
+
 
 
 // caracteres uteis para tabelas
